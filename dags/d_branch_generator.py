@@ -1,4 +1,3 @@
-
 from airflow import DAG
 import pandas as pd
 from datetime import datetime, timedelta
@@ -6,16 +5,16 @@ import random
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
 
-start_date = datetime(2024, 09, 15)
-default_args = { 
-    'owner': 'mrh', 
-    'depends_on_past': False, 
-    'backfill': False,
+start_date = datetime(2024, 9, 15)
+default_args = {
+    "owner": "mrh",
+    "depends_on_past": False,
+    "backfill": False,
     # 'start_date': start_date
 }
 
 num_rows = 50
-output_file = './branch_dim_large_data.csv'
+output_file = "./branch_dim_large_data.csv"
 
 cities = [
     "New York, New York",
@@ -23,8 +22,8 @@ cities = [
     "Chicago, Illinois",
     "Houston, Texas",
     "Phoenix, Arizona",
-    "Philadelphia, Pennsylvania"
-    ]
+    "Philadelphia, Pennsylvania",
+]
 
 regions = [
     "California",
@@ -44,19 +43,29 @@ postcodes = [
     "85004",  # Phoenix, Arizona
 ]
 
+
 def generate_random_data(row_num):
-    branch_id = f'A{row_num:05d}'
-    branch_name = f'Branch {row_num}'
-    branch_address = f'{random.randomint(1,999)} {random.choice(["Main St", "Park Ave", "Oak St", "Maple Ave", "Elm St"])}'
+    branch_id = f"A{row_num:05d}"
+    branch_name = f"Branch {row_num}"
+    branch_address = f'{random.randint(1,999)} {random.choice(["Main St", "Park Ave", "Oak St", "Maple Ave", "Elm St"])}'
     city = random.choice(cities)
     region = random.choice(regions)
     postcode = random.choice(postcodes)
 
     now = datetime.now()
-    random_date = now - timedelta(days=random.randint(1,365))
+    random_date = now - timedelta(days=random.randint(1, 365))
     opening_date_millis = int(random_date.timestamp() * 1000)
 
-    return branch_id, branch_name, branch_address, city, region, postcode, opening_date_millis
+    return (
+        branch_id,
+        branch_name,
+        branch_address,
+        city,
+        region,
+        postcode,
+        opening_date_millis,
+    )
+
 
 branch_ids = []
 branch_names = []
@@ -66,9 +75,10 @@ regions = []
 postcodes = []
 opening_dates = []
 
+
 def generate_branch_dim_data():
     row_num = 1
-    while row_num <= num_rows: 
+    while row_num <= num_rows:
         data = generate_random_data(row_num)
         branch_ids.append(data[0])
         branch_names.append(data[1])
@@ -79,33 +89,38 @@ def generate_branch_dim_data():
         opening_dates.append(data[6])
         row_num += 1
 
-        df = pd.DataFrame({
-            'branch_id': branch_ids,
-            'branch_names': branch_names,
-            'branch_addresses': branch_addresses,
-            'cities': cities,
-            'regions': regions,
-            'postcodes': postcodes,
-            'opening_dates': opening_dates,
-        })
+        df = pd.DataFrame(
+            {
+                "branch_id": branch_ids,
+                "branch_names": branch_names,
+                "branch_addresses": branch_addresses,
+                "cities": cities,
+                "regions": regions,
+                "postcodes": postcodes,
+                "opening_dates": opening_dates,
+            }
+        )
 
         df.to_csv(output_file, index=False)
 
-        print(f'{num_rows} rows of data generated and saved to {output_file}')
+        print(f"{num_rows} rows of data generated and saved to {output_file}")
 
-with DAG('d_branch_generator', default_args=default_args,description='Generate large branch dimensions data in a CSV file', schedule_interval=timedelta(days=1), start_date=start_date, tags=['schema']) as dag:
-    
-    start = EmptyOperator(
-        task_id='start_task'
-    )
+
+with DAG(
+    "d_branch_generator",
+    default_args=default_args,
+    description="Generate large branch dimensions data in a CSV file",
+    schedule_interval=timedelta(days=1),
+    start_date=start_date,
+    tags=["schema"],
+) as dag:
+
+    start = EmptyOperator(task_id="start_task")
 
     generate_branch_dim_data = PythonOperator(
-        task_id='generate_account_dim_data',
-        python_callable=generate_branch_dim_data
+        task_id="generate_branch_dim_data", python_callable=generate_branch_dim_data
     )
 
-    end = EmptyOperator(
-        task_id='end_task'
-    )
+    end = EmptyOperator(task_id="end_task")
 
     start >> generate_branch_dim_data >> end
