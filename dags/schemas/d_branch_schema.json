@@ -1,0 +1,31 @@
+{
+  "schemaName": "d_branch",
+  "enableColumnBasedNullHandling": false,
+  "dimensionFieldSpecs": [
+    {
+      "name": "branch_id",
+      "dataType": "STRING"
+    },
+    {
+      "name": "branch_name",
+      "dataType": "STRING"
+    },
+    {
+      "name": "branch_address",
+      "dataType": "STRING"
+    },
+    {
+      "name": "city",
+      "dataType": "STRING"
+    },
+    {
+      "name": "state",
+      "dataType": "STRING"
+    },
+    {
+      "name": "zipcode",
+      "dataType": "STRING"
+    }
+  ],
+  "metricFieldSpecs": []
+}

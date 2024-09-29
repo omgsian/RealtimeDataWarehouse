@@ -1,0 +1,36 @@
+{
+  "schemaName": "d_account",
+  "enableColumnBasedNullHandling": false,
+  "dimensionFieldSpecs": [
+    {
+      "name": "account_id",
+      "dataType": "STRING"
+    },
+    {
+      "name": "account_type",
+      "dataType": "STRING"
+    },
+    {
+      "name": "customer_id",
+      "dataType": "STRING"
+    },
+    {
+      "name": "opening_date",
+      "dataType": "TIMESTAMP"
+    },
+    {
+      "name": "status",
+      "dataType": "STRING"
+    },
+    {
+      "name": "balance",
+      "dataType": "DOUBLE"
+    }
+  ],
+  "metricFieldSpecs": [
+    {
+      "name": "balance",
+      "dataType": "DOUBLE"
+    }
+  ]
+}
