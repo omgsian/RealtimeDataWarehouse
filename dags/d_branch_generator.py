@@ -84,21 +84,21 @@ def generate_branch_dim_data():
         opening_dates.append(data[6])
         row_num += 1
 
-        df = pd.DataFrame(
-            {
-                "branch_id": branch_ids,
-                "branch_names": branch_names,
-                "branch_addresses": branch_addresses,
-                "cities": cities,
-                "regions": regions,
-                "postcodes": postcodes,
-                "opening_dates": opening_dates,
-            }
-        )
+    df = pd.DataFrame(
+        {
+            "branch_id": branch_ids,
+            "branch_names": branch_names,
+            "branch_addresses": branch_addresses,
+            "cities": cities,
+            "regions": regions,
+            "postcodes": postcodes,
+            "opening_dates": opening_dates,
+        }
+    )
 
-        df.to_csv(output_file, index=False)
+    df.to_csv(output_file, index=False)
 
-        print(f"{num_rows} rows of data generated and saved to {output_file}")
+    print(f"{num_rows} rows of data generated and saved to {output_file}")
 
 
 with DAG(
