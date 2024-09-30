@@ -30,12 +30,12 @@ regions = [
 ]
 
 postcodes = [
-    "90210",  # Beverly Hills, California
-    "10001",  # New York, New York
-    "77002",  # Houston, Texas
-    "60611",  # Chicago, Illinois
-    "19103",  # Philadelphia, Pennsylvania
-    "85004",  # Phoenix, Arizona
+    "90210",
+    "10001",
+    "77002",
+    "60611",
+    "19103",
+    "85004",
 ]
 
 
@@ -65,9 +65,9 @@ def generate_random_data(row_num):
 branch_ids = []
 branch_names = []
 branch_addresses = []
-cities = []
-regions = []
-postcodes = []
+cities_ls = []
+regions_ls = []
+postcodes_ls = []
 opening_dates = []
 
 
@@ -78,9 +78,9 @@ def generate_branch_dim_data():
         branch_ids.append(data[0])
         branch_names.append(data[1])
         branch_addresses.append(data[2])
-        cities.append(data[3])
-        regions.append(data[4])
-        postcodes.append(data[5])
+        cities_ls.append(data[3])
+        regions_ls.append(data[4])
+        postcodes_ls.append(data[5])
         opening_dates.append(data[6])
         row_num += 1
 
@@ -89,9 +89,9 @@ def generate_branch_dim_data():
             "branch_id": branch_ids,
             "branch_names": branch_names,
             "branch_addresses": branch_addresses,
-            "cities": cities,
-            "regions": regions,
-            "postcodes": postcodes,
+            "cities": cities_ls,
+            "regions": regions_ls,
+            "postcodes": postcodes_ls,
             "opening_dates": opening_dates,
         }
     )

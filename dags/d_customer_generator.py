@@ -38,14 +38,15 @@ def generate_random_data(row_num):
     )
 
 
-def generate_customer_dim_data():
+customer_ids = []
+first_names = []
+last_names = []
+emails = []
+phone_numbers = []
+registration_dates = []
 
-    customer_ids = []
-    first_names = []
-    last_names = []
-    emails = []
-    phone_numbers = []
-    registration_dates = []
+
+def generate_customer_dim_data():
 
     row_num = 1
     while row_num <= num_rows:
@@ -66,20 +67,20 @@ def generate_customer_dim_data():
         registration_dates.append(registration_date_millis)
         row_num += 1
 
-        df = pd.DataFrame(
-            {
-                "customer_id": customer_ids,
-                "first_name": first_names,
-                "last_name": last_names,
-                "email": emails,
-                "phone_number": phone_numbers,
-                "registration_date": registration_dates,
-            }
-        )
+    df = pd.DataFrame(
+        {
+            "customer_id": customer_ids,
+            "first_name": first_names,
+            "last_name": last_names,
+            "email": emails,
+            "phone_number": phone_numbers,
+            "registration_date": registration_dates,
+        }
+    )
 
-        df.to_csv(output_file, index=False)
+    df.to_csv(output_file, index=False)
 
-        print(f"{num_rows} rows of data generated and saved to {output_file}")
+    print(f"{num_rows} rows of data generated and saved to {output_file}")
 
 
 with DAG(
