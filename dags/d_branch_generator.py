@@ -6,12 +6,7 @@ from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
 
 start_date = datetime(2024, 9, 15)
-default_args = {
-    "owner": "mrh",
-    "depends_on_past": False,
-    "backfill": False,
-    # 'start_date': start_date
-}
+default_args = {"owner": "mrh", "depends_on_past": False, "backfill": False}
 
 num_rows = 50
 output_file = "./branch_dim_large_data.csv"

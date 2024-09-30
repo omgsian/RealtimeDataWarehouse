@@ -26,7 +26,7 @@ opening_dates = []
 
 def generate_random_data(row_num):
     account_id = f"A{row_num:05d}"
-    account_types = random.choice(["Savings", "Checking"])
+    account_type = random.choice(["Savings", "Checking"])
     status = random.choice(["Active", "Inactive"])
     customer_id = f"C{random.randint(1,1000)}"
     balance = round(random.uniform(100.00, 10000.00))
@@ -35,37 +35,37 @@ def generate_random_data(row_num):
     random_date = now - timedelta(days=random.randint(1, 365))
     opening_date_millis = int(random_date.timestamp() * 1000)
 
-    return account_id, account_types, status, customer_id, balance, opening_date_millis
+    return account_id, account_type, status, customer_id, balance, opening_date_millis
 
 
 def generate_account_dim_data():
     row_num = 1
     while row_num <= num_rows:
-        account_id, account_types, status, customer_id, balance, opening_date_millis = (
+        account_id, account_type, status, customer_id, balance, opening_date_millis = (
             generate_random_data(row_num)
         )
         account_ids.append(account_id)
-        account_types.append(account_types)
+        account_types.append(account_type)
         statuses.append(status)
         customer_ids.append(customer_id)
         balances.append(balance)
         opening_dates.append(opening_date_millis)
         row_num += 1
 
-        df = pd.DataFrame(
-            {
-                "account_id": account_ids,
-                "account_type": account_types,
-                "status": statuses,
-                "customer_id": customer_ids,
-                "balance": balances,
-                "opening_date": opening_dates,
-            }
-        )
+    df = pd.DataFrame(
+        {
+            "account_id": account_ids,
+            "account_type": account_types,
+            "status": statuses,
+            "customer_id": customer_ids,
+            "balance": balances,
+            "opening_date": opening_dates,
+        }
+    )
 
-        df.to_csv(output_file, index=False)
+    df.to_csv(output_file, index=False)
 
-        print(f"{num_rows} rows of data generated and saved to {output_file}")
+    print(f"{num_rows} rows of data generated and saved to {output_file}")
 
 
 with DAG(
