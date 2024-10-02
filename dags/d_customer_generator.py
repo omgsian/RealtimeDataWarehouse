@@ -1,22 +1,24 @@
-from airflow import DAG
-import pandas as pd
-from datetime import datetime, timedelta
 import random
+from datetime import datetime, timedelta
+
+import pandas as pd
+from airflow import DAG
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
 
-start_date = datetime(2024, 9, 30)
+start_date = datetime(2024, 9, 15)
 default_args = {
-    "owner": "mrh",
+    "owner": "codewithyu",
     "depends_on_past": False,
     "backfill": False,
-    # 'start_date': start_date
 }
 
-num_rows = 100
+# Parameters
+num_rows = 100  # Number of rows to generate
 output_file = "./customer_dim_large_data.csv"
 
 
+# Function to generate random data
 def generate_random_data(row_num):
     customer_id = f"C{row_num:05d}"
     first_name = f"FirstName{row_num}"
@@ -24,9 +26,14 @@ def generate_random_data(row_num):
     email = f"customer{row_num}@example.com"
     phone_number = f"+1-800-{random.randint(1000000, 9999999)}"
 
+    # Generate timestamp with milliseconds
     now = datetime.now()
-    random_date = now - timedelta(days=random.randint(1, 365))
-    registration_date_millis = int(random_date.timestamp() * 1000)
+    random_date = now - timedelta(
+        days=random.randint(0, 3650)
+    )  # Random date within the last 10 years
+    registration_date_millis = int(
+        random_date.timestamp() * 1000
+    )  # Convert to milliseconds
 
     return (
         customer_id,
@@ -38,16 +45,16 @@ def generate_random_data(row_num):
     )
 
 
-customer_ids = []
-first_names = []
-last_names = []
-emails = []
-phone_numbers = []
-registration_dates = []
-
-
 def generate_customer_dim_data():
+    # Initialize lists to store data
+    customer_ids = []
+    first_names = []
+    last_names = []
+    emails = []
+    phone_numbers = []
+    registration_dates = []
 
+    # Generate data using a while loop
     row_num = 1
     while row_num <= num_rows:
         (
@@ -58,7 +65,6 @@ def generate_customer_dim_data():
             phone_number,
             registration_date_millis,
         ) = generate_random_data(row_num)
-
         customer_ids.append(customer_id)
         first_names.append(first_name)
         last_names.append(last_name)
@@ -67,6 +73,7 @@ def generate_customer_dim_data():
         registration_dates.append(registration_date_millis)
         row_num += 1
 
+    # Create a DataFrame
     df = pd.DataFrame(
         {
             "customer_id": customer_ids,
@@ -78,26 +85,40 @@ def generate_customer_dim_data():
         }
     )
 
+    # Save DataFrame to CSV
     df.to_csv(output_file, index=False)
 
-    print(f"{num_rows} rows of data generated and saved to {output_file}")
+    print(
+        f"CSV file '{output_file}' with {num_rows} rows has been generated successfully."
+    )
 
+
+# Initialize lists to store data
+customer_ids = []
+first_names = []
+last_names = []
+emails = []
+phone_numbers = []
+registration_dates = []
 
 with DAG(
-    "d_customer_generator",
+    "customer_dim_generator",
     default_args=default_args,
-    description="Generate large customer dimensions data in a CSV file",
+    description="A DAG to generate large customer dimension data",
     schedule_interval=timedelta(days=1),
     start_date=start_date,
-    tags=["schema"],
+    tags=["dimension"],
 ) as dag:
-
-    start = EmptyOperator(task_id="start_task")
+    start = EmptyOperator(
+        task_id="start_task",
+    )
 
     generate_customer_dim_data = PythonOperator(
         task_id="generate_customer_dim_data", python_callable=generate_customer_dim_data
     )
 
-    end = EmptyOperator(task_id="end_task")
+    end = EmptyOperator(
+        task_id="end_task",
+    )
 
     start >> generate_customer_dim_data >> end
