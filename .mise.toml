@@ -1,5 +1,5 @@
 [tools]
-python = "3.9"
+python = "3.11.4" # [optional] will be used for the venv
 
 [env]
 _.python.venv = { path = ".venv", create = true } # create the venv if it doesn't exist
