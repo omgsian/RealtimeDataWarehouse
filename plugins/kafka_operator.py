@@ -9,22 +9,22 @@ from datetime import datetime, timedelta
 from kafka import KafkaProducer
 
 
-class KafkaProducerOperator(BaseOperator):
+class KafkaProduceOperator(BaseOperator):
     @apply_defaults
     def __init__(self, kafka_broker, kafka_topic, num_records=100, *args, **kwargs):
-        super(KafkaProducerOperator, self).__init__(*args, **kwargs)
+        super(KafkaProduceOperator, self).__init__(*args, **kwargs)
         self.kafka_broker = kafka_broker
         self.kafka_topic = kafka_topic
         self.num_records = num_records
 
     def generate_transaction_data(self, row_num):
-        customer_ids = [f"C{str(i).zfill(5)}" for i in range(0, self.num_records + 1)]
-        account_ids = [f"A{str(i).zfill(5)}" for i in range(0, self.num_records + 1)]
-        branch_ids = [f"B{str(i).zfill(5)}" for i in range(0, self.num_records + 1)]
+        customer_ids = [f"C{str(i).zfill(5)}" for i in range(1, self.num_records + 1)]
+        account_ids = [f"A{str(i).zfill(5)}" for i in range(1, self.num_records + 1)]
+        branch_ids = [f"B{str(i).zfill(5)}" for i in range(1, self.num_records + 1)]
 
         transaction_types = ["Credit", "Debit", "Transfer", "Withdrawal", "Deposit"]
         currencies = ["USD", "GBP", "EUR"]
-        transaction_ids = f"T{str(row_num).zfill(6)}"
+        transaction_id = f"T{str(row_num).zfill(6)}"
         transaction_date = int(
             (datetime.now() - timedelta(days=random.randint(0, 365))).timestamp() * 1000
         )
@@ -37,7 +37,7 @@ class KafkaProducerOperator(BaseOperator):
         exchange_rate = round(random.uniform(0.5, 1.5), 4)
 
         transaction = {
-            "transaction_id": transaction_ids,
+            "transaction_id": transaction_id,
             "transaction_date": transaction_date,
             "account_id": account_id,
             "customer_id": customer_id,
