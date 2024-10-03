@@ -59,8 +59,8 @@ class KafkaProduceOperator(BaseOperator):
             transaction = self.generate_transaction_data(row_num)
             producer.send(self.kafka_topic, value=transaction)
             self.log.info(f"Sent transaction: {transaction}")
+
         producer.flush()
         self.log.info(
             f"{self.num_records} txns has been sent to kafka topic {self.kafka_topic}"
         )
-        producer.close()
