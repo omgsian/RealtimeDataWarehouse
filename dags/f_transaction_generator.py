@@ -21,10 +21,10 @@ with DAG(
 
     start = EmptyOperator(task_id="start")
     generate_txn_data = KafkaProduceOperator(
-        task_id="generate_txn_data",
-        kafka_broker="redpanda-0:9092",
+        task_id="generate_txn_fact_data",
+        kafka_broker="kafka_broker:9092",
         kafka_topic="transaction_facts",
-        num_records=100,
+        num_records=1000,
     )
     end = EmptyOperator(task_id="end")
 

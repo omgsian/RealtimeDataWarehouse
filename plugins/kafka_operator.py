@@ -62,5 +62,5 @@ class KafkaProduceOperator(BaseOperator):
 
         producer.flush()
         self.log.info(
-            f"{self.num_records} txns has been sent to kafka topic {self.kafka_topic}"
+            f"{self.num_records} transaction records has been sent to kafka topic {self.kafka_topic}!"
         )
