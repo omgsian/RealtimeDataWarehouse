@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.empty import EmptyOperator
-from kafka_operator import KafkaProducerOperator
+from kafka_operator import KafkaProduceOperator
 
 start_date = datetime(2024, 9, 15)
 default_args = {
@@ -20,7 +20,7 @@ with DAG(
 ) as dag:
 
     start = EmptyOperator(task_id="start")
-    generate_txn_data = KafkaProducerOperator(
+    generate_txn_data = KafkaProduceOperator(
         task_id="generate_txn_data",
         kafka_broker="redpanda-0:9092",
         kafka_topic="transaction_facts",
