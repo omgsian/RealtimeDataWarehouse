@@ -11,9 +11,10 @@ down:
     docker-compose down --volumes
 
 # Run the cluster in detached mode
+upb:
+    docker-compose up --build -d
 up:
     docker-compose up -d
-
 # Stop services
 stop: 
     docker-compose stop

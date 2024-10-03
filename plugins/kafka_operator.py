@@ -1,6 +1,7 @@
 import json
 import random
 from typing import Any
+
 from airflow.models import BaseOperator
 from airflow.utils.context import Context
 from airflow.utils.decorators import apply_defaults
@@ -21,9 +22,9 @@ class KafkaProduceOperator(BaseOperator):
         customer_ids = [f"C{str(i).zfill(5)}" for i in range(1, self.num_records + 1)]
         account_ids = [f"A{str(i).zfill(5)}" for i in range(1, self.num_records + 1)]
         branch_ids = [f"B{str(i).zfill(5)}" for i in range(1, self.num_records + 1)]
-
         transaction_types = ["Credit", "Debit", "Transfer", "Withdrawal", "Deposit"]
         currencies = ["USD", "GBP", "EUR"]
+
         transaction_id = f"T{str(row_num).zfill(6)}"
         transaction_date = int(
             (datetime.now() - timedelta(days=random.randint(0, 365))).timestamp() * 1000
@@ -55,6 +56,7 @@ class KafkaProduceOperator(BaseOperator):
             bootstrap_servers=self.kafka_broker,
             value_serializer=lambda v: json.dumps(v).encode("utf-8"),
         )
+
         for row_num in range(1, self.num_records + 1):
             transaction = self.generate_transaction_data(row_num)
             producer.send(self.kafka_topic, value=transaction)
