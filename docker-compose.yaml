@@ -3,7 +3,7 @@ volumes:
 
 x-airflow-common:
   &airflow-common
-  image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.7.1}
+  image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.8.2}
   build: .
   environment:
     &airflow-common-env
@@ -35,7 +35,7 @@ x-airflow-common:
     postgres:
       condition: service_healthy
   networks:
-    - codewithyu
+    - mrh_network
 
 services:
   zookeeper:
@@ -54,7 +54,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - codewithyu
+      - mrh_network
 
   kafka_broker:
     image: docker.redpanda.com/redpandadata/redpanda:v24.1.1
@@ -77,7 +77,7 @@ services:
       - 19092:19092
       - 19644:9644
     networks:
-      - codewithyu
+      - mrh_network
 
   console:
     image: docker.redpanda.com/redpandadata/console:v2.5.2
@@ -107,7 +107,7 @@ services:
             - name: local-connect-cluster
               url: http://connect:8083
     networks:
-      - codewithyu
+      - mrh_network
 
   postgres:
     image: postgres:13
@@ -125,7 +125,7 @@ services:
       retries: 5
       start_period: 5s
     networks:
-      - codewithyu
+      - mrh_network
 
   airflow-webserver:
     <<: *airflow-common
@@ -145,7 +145,7 @@ services:
       airflow-init:
         condition: service_completed_successfully
     networks:
-      - codewithyu
+      - mrh_network
 
   airflow-scheduler:
     <<: *airflow-common
@@ -163,7 +163,7 @@ services:
       airflow-init:
         condition: service_completed_successfully
     networks:
-      - codewithyu
+      - mrh_network
 
   airflow-init:
     <<: *airflow-common
@@ -242,7 +242,7 @@ services:
     volumes:
       - ${AIRFLOW_PROJ_DIR:-.}:/sources
     networks:
-      - codewithyu
+      - mrh_network
 
   airflow-cli:
     <<: *airflow-common
@@ -257,7 +257,7 @@ services:
       - -c
       - airflow
     networks:
-      - codewithyu
+      - mrh_network
 
   pinot-controller:
     image: apachepinot/pinot:1.2.0
@@ -271,7 +271,7 @@ services:
     depends_on:
       - zookeeper
     networks:
-      - codewithyu
+      - mrh_network
 
   pinot-broker:
     image: apachepinot/pinot:1.2.0
@@ -285,7 +285,7 @@ services:
     depends_on:
       - pinot-controller
     networks:
-      - codewithyu
+      - mrh_network
 
   pinot-server:
     image: apachepinot/pinot:1.2.0
@@ -299,7 +299,7 @@ services:
     depends_on:
       - pinot-broker
     networks:
-      - codewithyu
+      - mrh_network
 
 networks:
-  codewithyu:
+  mrh_network:
