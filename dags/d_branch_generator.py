@@ -40,7 +40,7 @@ postcodes = [
 
 
 def generate_random_data(row_num):
-    branch_id = f"A{row_num:05d}"
+    branch_id = f"B{row_num:05d}"
     branch_name = f"Branch {row_num}"
     branch_address = f'{random.randint(1,999)} {random.choice(["Main St", "Park Ave", "Oak St", "Maple Ave", "Elm St"])}'
     city = random.choice(cities)
@@ -48,7 +48,7 @@ def generate_random_data(row_num):
     postcode = random.choice(postcodes)
 
     now = datetime.now()
-    random_date = now - timedelta(days=random.randint(1, 365))
+    random_date = now - timedelta(days=random.randint(0, 3650))
     opening_date_millis = int(random_date.timestamp() * 1000)
 
     return (
@@ -75,6 +75,7 @@ def generate_branch_dim_data():
     row_num = 1
     while row_num <= num_rows:
         data = generate_random_data(row_num)
+        print(data)
         branch_ids.append(data[0])
         branch_names.append(data[1])
         branch_addresses.append(data[2])
@@ -87,12 +88,11 @@ def generate_branch_dim_data():
     df = pd.DataFrame(
         {
             "branch_id": branch_ids,
-            "branch_names": branch_names,
-            "branch_addresses": branch_addresses,
-            "cities": cities_ls,
-            "regions": regions_ls,
-            "postcodes": postcodes_ls,
-            "opening_dates": opening_dates,
+            "branch_name": branch_names,
+            "branch_address": branch_addresses,
+            "city": cities_ls,
+            "state": regions_ls,
+            "zipcode": postcodes_ls,  # Note: changed from 'postcode' to 'zipcode'
         }
     )
 

@@ -6,7 +6,7 @@ from kafka_operator import KafkaProduceOperator
 
 start_date = datetime(2024, 9, 15)
 default_args = {
-    "owner": "codewithyu",
+    "owner": "mrh",
     "depends_on_past": False,
     "backfill": False,
     "start_date": start_date,
