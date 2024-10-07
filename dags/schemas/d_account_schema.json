@@ -1,6 +1,5 @@
 {
   "schemaName": "d_account",
-  "enableColumnBasedNullHandling": false,
   "dimensionFieldSpecs": [
     {
       "name": "account_id",
@@ -21,10 +20,6 @@
     {
       "name": "status",
       "dataType": "STRING"
-    },
-    {
-      "name": "balance",
-      "dataType": "DOUBLE"
     }
   ],
   "metricFieldSpecs": [
